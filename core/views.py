@@ -35,7 +35,7 @@ def blur(request):
 
 
 def mailindex(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated: 
         logout(request)
     # return render(request,'core/index.html')
     return render(request, 'core/login.html')
