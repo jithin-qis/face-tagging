@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import generic
 from django.views.generic import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .forms import UserForm, UpdateUserForm, UpdateProfileForm, CreatePost, CreateComment
+from .forms import *
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -14,7 +14,24 @@ from django.http import HttpResponseRedirect
 from .code import blur_img, check_img
 import os
 from .models import Post
-from django.core.mail import send_mail
+from django.core.mail import send_mail  
+
+
+def index(request):
+    form = UserLoginForm(request.POST or None)
+    if request.user.is_authenticated:
+        return redirect(feed)
+    if request.method == 'POST':
+        if form.is_valid():
+            email=request.POST.get('email')
+            username = User.objects.get(email=email).username
+            password=request.POST.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect(feed)
+    return render(request, 'core/login.html', {'form':form,})
+
 
 @login_required
 def blurid(request, id=None):
@@ -37,13 +54,6 @@ def blur(request):
 def mailindex(request):
     if request.user.is_authenticated: 
         logout(request)
-    # return render(request,'core/index.html')
-    return render(request, 'core/login.html')
-
-
-def index(request):
-    if request.user.is_authenticated:
-        return redirect(feed)
     # return render(request,'core/index.html')
     return render(request, 'core/login.html')
 

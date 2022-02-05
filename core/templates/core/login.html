@@ -1,73 +1,92 @@
-{%load static %}
-
+{% load static %}
 <!doctype html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Language" content="en" />
-    <meta name="msapplication-TileColor" content="#2d89ef">
-    <meta name="theme-color" content="#4188c9">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
-    <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-    <!-- Generated: 2018-04-16 09:29:05 +0200 -->
-    <title>Login</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-    <script src="./assets/js/require.min.js"></script>
-    <script>
-      requirejs.config({
-          baseUrl: '.'
-      });
-    </script>
-    <!-- Dashboard Core -->
-    <link href="{%static 'core/dashboard.css'%}" rel="stylesheet" />
-    <script src="./assets/js/dashboard.js"></script>
-    <!-- c3.js Charts Plugin -->
-    <link href="./assets/plugins/charts-c3/plugin.css" rel="stylesheet" />
-    <script src="./assets/plugins/charts-c3/plugin.js"></script>
-    <!-- Google Maps Plugin -->
-    <link href="./assets/plugins/maps-google/plugin.css" rel="stylesheet" />
-    <script src="./assets/plugins/maps-google/plugin.js"></script>
-    <!-- Input Mask Plugin -->
-    <script src="./assets/plugins/input-mask/plugin.js"></script>
-  </head>
-  <body class="">
-    <div class="page">
-      <div class="page-single">
-        <div class="container">
-          <div class="row">
-            <div class="col col-login mx-auto">
-              <div class="text-center mb-6">
-                <img src="./assets/brand/tabler.svg" class="h-6" alt="">
+<html lang="en">
+
+<head>
+  <title>Login 04</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10">
+          <div class="wrap d-md-flex">
+            <div class="img" style="background-image: url({% static 'images/bg-1.jpg' %});">
+            </div>
+            <div class="login-wrap p-4 p-md-5">
+              <div class="d-flex">
+                <div class="w-100">
+                  <h3 class="mb-4">Sign In</h3>
+                </div>
+                <div class="w-100">
+                  <p class="social-media d-flex justify-content-end">
+                    <a href="#" class="social-icon d-flex align-items-center justify-content-center"><span
+                        class="fa fa-facebook"></span></a>
+                    <a href="#" class="social-icon d-flex align-items-center justify-content-center"><span
+                        class="fa fa-twitter"></span></a>
+                  </p>
+                </div>
               </div>
-              <form class="card" action="http://127.0.0.1:8000/login/" method="post">
-                <div class="card-body p-2p">
-                <div class="card-title">Login to your account</div>
-                {%csrf_token%}
-                {%include 'core/form-template.html'%}
-                
-                  
-                  <div class="form-footer">
-                    <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+              <form class="signin-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group mb-3">
+                  <label class="label" for="name">{{field.label_tag}}</label>
+                  <!-- <input name="{{field.name}}" type="{{field.type}}" class="form-control" placeholder="{{field.help_text}}"
+                    required> -->
+                    {{field}}
+                  <span class="text-danger small">{{field.errors}}</span>
+
+
+                  <!-- <div class="col-sm-12 col-md-7">
+                    <label class="control-label col-sm-2"><strong>{{field.label_tag}}</strong></label>
+                    <div class="col-sm-10 col-md-5 ">{{field}}</div>
+                  </div> -->
+                </div>
+                {% endfor %}
+
+                <!-- <div class="form-group mb-3">
+                  <label class="label" for="name">Email</label>
+                  <input name="email" type="text" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="form-group mb-3">
+                  <label class="label" for="password">Password</label>
+                  <input name="password" type="password" class="form-control" placeholder="Password" required>
+                </div> -->
+                <div class="form-group">
+                  <button type="submit" class="form-control btn btn-primary rounded submit px-3">Sign In</button>
+                </div>
+                <div class="form-group d-md-flex">
+                  <div class="w-50 text-left">
+                    <label class="checkbox-wrap checkbox-primary mb-0">Remember Me
+                      <input type="checkbox" checked>
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <div class="w-50 text-md-right">
+                    <a href="#">Forgot Password</a>
                   </div>
                 </div>
               </form>
-<!--                                  <a href="http://127.0.0.1:8000/login/"><button class="btn btn-primary btn-block">Sign in</button></a>-->
-
-              <div class="text-center text-muted">
-                Don't have account yet? <a href="{% url 'register'%}">Sign up</a>
-              </div>
+              <p class="text-center">Not a member? <a href="{% url 'register' %}">Sign Up</a></p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </body>
+  </section>
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/popper.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
 </html>

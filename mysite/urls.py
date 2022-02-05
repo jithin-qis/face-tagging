@@ -14,14 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.conf.urls.static import static
 from django.conf.urls import url
 
-#----------------------------------------
+# ----------------------------------------
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
@@ -33,30 +33,35 @@ from django.contrib.auth.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', cv.feed, name='home'),
-    path('core/',include('core.urls')),
-    path('login/',LoginView.as_view(template_name='core/login.html'),name='login'),
-    path('welcome/',cv.welcome,name="welcome"),
-    path('accounts/profile/',cv.welcome,name="welcome"),
-    path('logout/',LogoutView.as_view(template_name='core/logout.html'),name='logout'),
-    path('register/',cv.UserFormView.as_view(template_name='core/registration_form.html'),name='register'),
-    url(r'^profile/(?P<username>\w+)/$',cv.profile,name='profile'),
-    url(r'^followweb/(?P<username>\w+)/$',cv.followweb,name="followweb"),
-    url(r'^unfollowweb/(?P<username>\w+)/$',cv.unfollowweb,name="unfollowweb"),
-    url(r'^postweb/(?P<username>\w+)/$',cv.postweb,name="postweb"),
-    url(r'^commentweb/(?P<username>\w+)/(?P<post_id>\d+)/$', cv.commentweb,name = "commentweb"),
-    path('feed/',cv.feed,name="feed"),
+
+
+    path('home', cv.feed, name='home'),
+    path('core/', include('core.urls')),
+    path('login/', LoginView.as_view(template_name='core/login.html'), name='login1'),
+    path('welcome/', cv.welcome, name="welcome"),
+    path('accounts/profile/', cv.welcome, name="welcome"),
+    path('logout/', LogoutView.as_view(template_name='core/logout.html'), name='logout'),
+    path('register/', cv.UserFormView.as_view(template_name='core/registration_form.html'), name='register'),
+    url(r'^profile/(?P<username>\w+)/$', cv.profile, name='profile'),
+    url(r'^followweb/(?P<username>\w+)/$', cv.followweb, name="followweb"),
+    url(r'^unfollowweb/(?P<username>\w+)/$',
+        cv.unfollowweb, name="unfollowweb"),
+    url(r'^postweb/(?P<username>\w+)/$', cv.postweb, name="postweb"),
+    url(r'^commentweb/(?P<username>\w+)/(?P<post_id>\d+)/$',
+        cv.commentweb, name="commentweb"),
+    path('feed/', cv.feed, name="feed"),
     path('blur/', cv.blur, name='blur'),
     path('blurid/<int:id>/', cv.blurid, name='blurid'),
     path('mailindex/', cv.mailindex, name='mailindex'),
-path('clickfun/', cv.clickfun, name='clickfun'),
+    path('clickfun/', cv.clickfun, name='clickfun'),
+    path('', cv.index, name='login'),
 ]
 
 if settings.DEBUG:
-        urlpatterns += static(settings.MEDIA_URL,
-                              document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
 
-#---------------------------------------
+# ---------------------------------------
 
 # from django.contrib import admin
 # from django.urls import path,include
@@ -82,7 +87,7 @@ if settings.DEBUG:
 #      url(r'^postweb/(?P<username>\w+)/$',user_views.postweb,name="postweb"),
 #      url(r'^commentweb/(?P<username>\w+)/(?P<post_id>\d+)/$', user_views.commentweb,name = "commentweb"),
 #      path('feed/',user_views.feed,name="feed"),
-     
+
 # ]
 
 # if settings.DEBUG:
