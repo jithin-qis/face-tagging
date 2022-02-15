@@ -1,20 +1,16 @@
 from django.shortcuts import render, redirect
-from django.views import generic
 from django.views.generic import View
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .forms import *
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
-from .models import Profile, User, Following, Follower, Post, DefaultPic
+from .models import *
 from django.urls import reverse
-from django.http import HttpResponseRedirect
 from .code import blur_img, check_img
 import os
 from .models import Post
 from django.core.mail import send_mail  
+import random
 
 
 def index(request):
@@ -33,72 +29,28 @@ def index(request):
     return render(request, 'core/login.html', {'form':form,})
 
 
-@login_required
-def blurid(request, id=None):
-    pro_pic = os.path.join('media', request.user.profile.profile_photo.name)
-    p = Post.objects.get(id=id)
-    print('post_pic:', os.path.join('media', p.post_picture.name), 'pro_pic:',
-          os.path.join('media', request.user.profile.profile_photo.name))
-    blur_img(os.path.join('media', p.post_picture.name), pro_pic)
-
-    return redirect(feed)
-
-@login_required
-def blur(request):
-    inp = os.path.join('media', request.user.profile.profile_photo.name)
-    for posts in Post.objects.all():
-        blur_img(os.path.join('media', posts.post_picture.name), inp)
-    return redirect(feed)
-
-
-def mailindex(request):
-    if request.user.is_authenticated: 
-        logout(request)
-    # return render(request,'core/index.html')
-    return render(request, 'core/login.html')
-
-
-
-import random
 def profile(request, username=None):
     username = request.user.username
-
+    messages.success(request, 'You have been logged in as %s'%username)
     c = True
     try:
         p_form = UpdateProfileForm( request.POST or None, request.FILES or None,instance=request.user.profile)
-        print('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
     except:
         p_form = UpdateProfileForm(request.POST, request.FILES)
-        print('PPPPPPPPPPPPPPPP')
         c = False
-
     if request.method == 'POST':
-        print('------------------------------POST')
         u_form = UpdateUserForm(request.POST, instance=request.user)
-        # p_form = UpdateProfileForm(request.POST, request.FILES)
-        # if c:
-        #     p_form = UpdateProfileForm(instance=request.user.profile)
-        #     print('IOIOIOIOIOIOIOIOIOIOI')
-        # else:
-        #     p_form = UpdateProfileForm(request.POST, request.FILES)
         if u_form.is_valid() or p_form.is_valid():
-            print('-------------------valid')
             try:
                 u_form.save()
             except:
                 pass
             if c:
-                # instance = Profile.objects.get(user=request.user)
-                # instance.profile_picture = request.FILES['profile_photo']
-                # instance.save()
-                # print('===========Here')
                 p_form.save()
             else:
                 instance = p_form.save(commit=False)
                 instance.user = request.user
                 instance.save()
-                print('__________________HERRRRR')
-
             messages.success(request, f'Your Profile has been updated!')
             url = reverse('profile', kwargs={'username': username})
             return redirect(url)
@@ -107,7 +59,6 @@ def profile(request, username=None):
     else:
         if username == request.user.username:
             u_form = UpdateUserForm(instance=request.user)
-            # p_form = UpdateProfileForm(instance=request.user.profile)
             p_form = UpdateProfileForm()
             post_form = CreatePost()
             person = User.objects.get(username=username)
@@ -127,26 +78,42 @@ def profile(request, username=None):
                 if (followers.follower_user == request.user.username):
                     already_a_follower = 1
                     break
-
             if already_a_follower == 1:
                 context = {
                     'person': person,
-
-
                 }
             else:
                 context = {
                     'person': person,
                     'f': 1,
-
                 }
         comment_form = CreateComment()
         context.update({'comment_form': comment_form, 'ts':random.randint(100, 136846)})
-    # print(context)
     return render(request, 'core/profile.html', context)
 
 
+@login_required
+def blurid(request, id=None):
+    pro_pic = os.path.join('media', request.user.profile.profile_photo.name)
+    p = Post.objects.get(id=id)
+    print('post_pic:', os.path.join('media', p.post_picture.name), 'pro_pic:',
+          os.path.join('media', request.user.profile.profile_photo.name))
+    blur_img(os.path.join('media', p.post_picture.name), pro_pic)
+    return redirect(feed)
 
+@login_required
+def blur(request):
+    inp = os.path.join('media', request.user.profile.profile_photo.name)
+    for posts in Post.objects.all():
+        blur_img(os.path.join('media', posts.post_picture.name), inp)
+    return redirect(feed)
+
+
+def mailindex(request):
+    if request.user.is_authenticated: 
+        logout(request)
+    # return render(request,'core/index.html')
+    return render(request, 'core/login.html')
 
 
 class UserFormView(View):
