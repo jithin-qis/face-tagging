@@ -17,3 +17,9 @@ sqlparse==0.4.1
 toml==0.10.2
 typing-extensions==3.10.0.0
 zipp==3.4.1
+dj-database-url
+django-heroku
+gunicorn
+psycopg2
+python-decouple
+whitenoise
