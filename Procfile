@@ -1,1 +1,1 @@
-web: gunicorn face-tagging.wsgi
+web: gunicorn mysite.wsgi
