@@ -2,7 +2,7 @@ import cv2
 import sys
 import face_recognition
 import os
-from tkinter.filedialog import *
+# from tkinter.filedialog import *
 def blur_img(post, pro_pic):
     imagePath = post
     pro = pro_pic
